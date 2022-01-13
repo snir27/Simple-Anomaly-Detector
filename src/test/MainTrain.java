@@ -38,7 +38,6 @@ public class MainTrain {
 	
 	
 	public static void main(String[] args) {
-//		StandartIO sIo = new StandartIO();
 		FileIO fio=new FileIO("input.txt", "output.txt");
 		CLI cli=new CLI(fio);
 		cli.start();

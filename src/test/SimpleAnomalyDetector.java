@@ -68,6 +68,13 @@ public class SimpleAnomalyDetector implements TimeSeriesAnomalyDetector {
 		return correlatedFeatureList;
 	}
 	
+	public float getCorrelationThreshold() {
+		return correlationThreshold;
+	}
+	public void setCorrelationThreshold(float correlationThreshold) {
+		this.correlationThreshold = correlationThreshold;
+	}
+	
 	private void addCorrelated(String xName, String yName, Line linearRegLine) {
 		CorrelatedFeatures cFeatures = new CorrelatedFeatures(xName, yName, maxCorrelathioPerColumn,
 				linearRegLine, maxDistance * 1.1f);

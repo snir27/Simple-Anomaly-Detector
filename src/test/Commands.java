@@ -26,8 +26,6 @@ public class Commands {
 		this.dio = dio;
 	}
 
-	// you may add other helper classes here
-
 	// the shared state of all commands
 	private class SharedState {
 		TimeSeries trainTimeSeries;
@@ -36,13 +34,6 @@ public class Commands {
 		List<AnomalyReport> anomalyReports = new ArrayList<AnomalyReport>();
 		double falsePositive;
 		double truePostive;
-		public void setTestTimeSeries(TimeSeries testTimeSeries) {
-			this.testTimeSeries = testTimeSeries;
-		}
-
-		public void setTrainTimeSeries(TimeSeries trainTimeSeries) {
-			this.trainTimeSeries = trainTimeSeries;
-		}
 
 		public TimeSeries getTestTimeSeries() {
 			return testTimeSeries;
@@ -54,6 +45,10 @@ public class Commands {
 
 		public List<AnomalyReport> getAnomalyReports() {
 			return anomalyReports;
+		}
+
+		public SimpleAnomalyDetector getSimpleAnomalyDetector() {
+			return simpleAnomalyDetector;
 		}
 
 		public void setAnomalyReports(List<AnomalyReport> anomalyReports) {
@@ -73,16 +68,17 @@ public class Commands {
 
 		public abstract void execute();
 	}
+
 	// Command class for Exit:
 	public class ExitCommand extends Command {
 
 		public ExitCommand() {
-			super("Exit command");
+			super("Exit Command");
 		}
 
 		@Override
 		public void execute() {
-			dio.write(description);
+			dio.write("bye");
 		}
 	}
 
@@ -137,8 +133,7 @@ public class Commands {
 	public class AlgorithemSettingsCommand extends Command {
 
 		public AlgorithemSettingsCommand() {
-			super("correlation threshold command");
-			// TODO Auto-generated constructor stub
+			super("Correlation threshold command");
 		}
 
 		@Override
@@ -160,16 +155,16 @@ public class Commands {
 	}
 
 	public class DetectAnomaliesCommand extends Command {
-		TimeSeries trainSeries;
-		TimeSeries testSeries;
-		SimpleAnomalyDetector simpleAnomalyDetector;
-		List<AnomalyReport> anomalyReports = new ArrayList<AnomalyReport>();
+		private TimeSeries trainSeries;
+		private TimeSeries testSeries;
+		private SimpleAnomalyDetector simpleAnomalyDetector;
+		private List<AnomalyReport> anomalyReports = new ArrayList<AnomalyReport>();
 
 		public DetectAnomaliesCommand() {
-			super("detect anomalies command");
-			trainSeries = sharedState.trainTimeSeries;
-			testSeries = sharedState.testTimeSeries;
-			simpleAnomalyDetector = sharedState.simpleAnomalyDetector;
+			super("Detect anomalies command");
+			trainSeries = sharedState.getTrainTimeSeries();
+			testSeries = sharedState.getTestTimeSeries();
+			simpleAnomalyDetector = sharedState.getSimpleAnomalyDetector();
 		}
 
 		@Override
@@ -182,10 +177,10 @@ public class Commands {
 	}
 
 	public class DisplayResultsCommand extends Command {
-		List<AnomalyReport> anomalyReports = new ArrayList<AnomalyReport>();
+		private List<AnomalyReport> anomalyReports = new ArrayList<AnomalyReport>();
 
 		public DisplayResultsCommand() {
-			super("display results command");
+			super("Display results command");
 			anomalyReports = sharedState.getAnomalyReports();
 		}
 
@@ -199,8 +194,8 @@ public class Commands {
 	}
 
 	public class UploadAnomaliesCommand extends Command {
-		List<AnomalyReport> anomalyReports = new ArrayList<AnomalyReport>();
-		List<AnomalyReport> updateAnomalyReports = new ArrayList<AnomalyReport>();
+		private List<AnomalyReport> anomalyReports = new ArrayList<AnomalyReport>();
+		private List<AnomalyReport> updateAnomalyReports = new ArrayList<AnomalyReport>();
 		Double falsePositive = 0.0, truePostive = 0.0;
 		Double truePositiveRate = 0.0, falsePositiveRate = 0.0;
 		PrintWriter printWriter;
